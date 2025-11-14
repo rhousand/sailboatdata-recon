@@ -5,10 +5,12 @@ A Python CLI tool for comparing sailboat specifications scraped from [sailboatda
 ## Features
 
 - 🔍 Scrape sailboat specifications from sailboatdata.com
+- 🔎 Intelligent boat name search with automatic variations (number-word conversions, spacing, etc.)
 - 📊 Compare multiple boats side-by-side
 - 🎨 Beautiful table output with Rich library
 - 🔧 Nix flake for reproducible development environment
 - 📋 JSON export option
+- 🧹 Filtered output (excludes UI elements like forum topics)
 
 ## Prerequisites
 
@@ -70,9 +72,15 @@ python sailboat_compare.py --help
 ## How It Works
 
 1. The tool normalizes boat names to URL-friendly format
-2. Fetches boat pages from sailboatdata.com using pattern: `/sailboat/{normalized-name}`
-3. Parses HTML to extract specifications using BeautifulSoup
-4. Displays results in a formatted comparison table using Rich
+2. If a boat is not found, automatically tries common variations:
+   - Number-word conversions (e.g., "30" ↔ "thirty")
+   - Spacing variations (e.g., "Catalina30" ↔ "Catalina 30")
+   - Decimal handling (e.g., "40.1" → "401")
+   - Brand/model reordering (e.g., "Beneteau Oceanis 40.1" → "Oceanis 401 Beneteau")
+3. Fetches boat pages from sailboatdata.com using pattern: `/sailboat/{normalized-name}`
+4. Parses HTML to extract specifications using BeautifulSoup with lxml parser
+5. Filters out unwanted UI elements (forum topics, navigation links)
+6. Displays results in a formatted comparison table using Rich
 
 ## Example Output
 
@@ -113,15 +121,46 @@ The flake provides a complete Python development environment with all dependenci
 
 ## Notes
 
-- The tool respects robots.txt and uses appropriate User-Agent headers
-- Rate limiting is handled by the requests session
-- Some boats may not be found if the name doesn't match the URL format
+- The tool uses appropriate User-Agent headers
+- Intelligent name search tries multiple variations automatically
+- Provides feedback when boats are found under alternative names
 - Specifications extracted depend on the HTML structure of sailboatdata.com
+- Handles multiple HTML parsing strategies (tables, definition lists, divs)
 
 ## License
 
 MIT
 
-## Disclaimer
+## ⚠️ IMPORTANT LEGAL DISCLAIMER
 
-This tool is for educational and research purposes. Please respect sailboatdata.com's terms of service and use responsibly.
+**YOU MUST OBTAIN PERMISSION BEFORE USING THIS TOOL**
+
+This tool performs automated data collection from sailboatdata.com, which **violates their Terms of Service** without explicit written permission.
+
+### Terms of Service Violations
+
+Sailboatdata.com's Terms of Service (Section 6) explicitly prohibit:
+- "systematic or automated data collection activities"
+- Use of automated tools that are "not a web browser"
+
+### Required Actions Before Use
+
+1. **Request Permission**: Contact sailboatdata.com at https://sailboatdata.com/contact/
+2. **Obtain Written Authorization**: Get explicit permission for automated access
+3. **Comply with Their Terms**: Follow any rate limits, attribution requirements, or other conditions they specify
+
+### Legal Risk
+
+Using this tool without permission may:
+- Violate sailboatdata.com's Terms of Service
+- Infringe on their intellectual property rights
+- Result in legal action or IP blocking
+
+### Recommended Use
+
+This repository is provided **for educational purposes only** to demonstrate web scraping techniques. The maintainers:
+- Do NOT endorse unauthorized use
+- Are NOT responsible for any legal consequences
+- Recommend obtaining proper authorization or using official APIs when available
+
+**See `permission_request_email.md` for a template to request access from sailboatdata.com.**

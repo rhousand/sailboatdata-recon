@@ -6,7 +6,12 @@
       "WebFetch(domain:sailboatdata.com)",
       "Bash(curl:*)",
       "Bash(git add:*)",
-      "Bash(python sailboat_compare.py:*)"
+      "Bash(python sailboat_compare.py:*)",
+      "Bash(git push:*)",
+      "Bash(gh pr create:*)",
+      "Bash(git checkout:*)",
+      "Bash(gh repo set-default:*)",
+      "Bash(gh api:*)"
     ],
     "deny": [],
     "ask": []
