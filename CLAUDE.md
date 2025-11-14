@@ -50,8 +50,10 @@ python sailboat_compare.py "boat1" "boat2"
 
 - **SailboatScraper**: Handles web scraping from sailboatdata.com
   - Normalizes boat names to URL-friendly format
-  - Fetches and parses HTML using BeautifulSoup
+  - Intelligent boat name search with automatic variations (number-word conversions, spacing, etc.)
+  - Fetches and parses HTML using BeautifulSoup with lxml parser
   - Extracts specifications from various HTML structures (tables, divs, definition lists)
+  - Filters out unwanted specifications (e.g., "View All Topics", "Create Topic")
 
 - **CLI Interface**: Built with Click framework
   - Accepts multiple boat names as arguments
@@ -72,7 +74,17 @@ Boats are accessed via: `https://sailboatdata.com/sailboat/{normalized-boat-name
 The scraper uses multiple strategies to extract specifications:
 1. Table rows (`<tr>` with `<th>`/`<td>` pairs)
 2. Definition lists (`<dt>`/`<dd>` pairs)
-3. Divs with spec-related classes
+3. Divs with `<strong>`/`<b>` tags containing label:value patterns
+
+### Boat Name Search Intelligence
+
+When a boat name is not found directly, the tool automatically tries variations:
+- Number-to-word conversions (e.g., "30" ↔ "thirty")
+- Spacing variations before numbers (e.g., "Catalina30" ↔ "Catalina 30")
+- Decimal point handling (e.g., "40.1" → "401")
+- Brand/model reordering (e.g., "Beneteau Oceanis 40.1" → "Oceanis 401 Beneteau")
+
+This fuzzy matching ensures users can find boats even when the exact naming convention is unclear.
 
 ### Nix Flake Structure
 
@@ -85,5 +97,7 @@ The scraper uses multiple strategies to extract specifications:
 
 - The tool respects standard web scraping practices (User-Agent headers, reasonable requests)
 - HTML structure parsing is resilient to multiple format variations
-- Some boats may not be found if name normalization doesn't match URL format
+- Intelligent boat name search tries multiple variations automatically when direct lookup fails
 - The scraper handles missing data gracefully with "-" placeholders
+- Unwanted UI elements are filtered from specifications (e.g., forum topics, navigation links)
+- Provides clear feedback when boats are found under alternative names

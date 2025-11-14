@@ -5,7 +5,8 @@
       "Bash(nix develop:*)",
       "WebFetch(domain:sailboatdata.com)",
       "Bash(curl:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(python sailboat_compare.py:*)"
     ],
     "deny": [],
     "ask": []
