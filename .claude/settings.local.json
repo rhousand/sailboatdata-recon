@@ -11,7 +11,13 @@
       "Bash(gh pr create:*)",
       "Bash(git checkout:*)",
       "Bash(gh repo set-default:*)",
-      "Bash(gh api:*)"
+      "Bash(gh api:*)",
+      "Bash(git commit:*)",
+      "Bash(gh pr merge:*)",
+      "Bash(git pull:*)",
+      "Bash(gh issue close:*)",
+      "Bash(gh issue create:*)",
+      "Bash(gh issue reopen:*)"
     ],
     "deny": [],
     "ask": []

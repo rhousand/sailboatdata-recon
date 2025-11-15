@@ -18,7 +18,7 @@ A Python CLI tool for comparing sailboat specifications scraped from [sailboatda
 
 Choose one of the following installation methods:
 - [Nix](https://nixos.org/download.html) with flakes enabled (recommended)
-- Python 3.14+ with pip
+- Python 3.13+ with pip
 - Conda/Mamba
 - uv (fast Python package installer)
 
@@ -116,7 +116,13 @@ python sailboat_compare.py --help
 
 ## Example Output
 
+### CLI Table Output
+
 ![Sailboat Comparison Example](./imgs/comparison-example.png)
+
+### PDF Export Example
+
+[View PDF Example](./imgs/comparison-example.pdf)
 
 ## Development
 
@@ -135,7 +141,7 @@ python sailboat_compare.py --help
 
 The flake provides a complete Python development environment with all dependencies:
 
-- Python 3.14
+- Python 3.13
 - requests (HTTP client)
 - beautifulsoup4 (HTML parsing)
 - click (CLI framework)
