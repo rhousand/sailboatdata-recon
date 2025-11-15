@@ -30,7 +30,18 @@ class SailboatScraper:
     """Scraper for sailboatdata.com"""
 
     # Specifications to exclude from the output
-    EXCLUDED_SPECS = {"View All Topics", "Create Topic"}
+    EXCLUDED_SPECS = {"View All Topics", "Create Topic", "Latest Topics"}
+
+    @staticmethod
+    def should_exclude_spec(label: str, value: str = "") -> bool:
+        """Check if a specification should be excluded from output"""
+        if label in SailboatScraper.EXCLUDED_SPECS:
+            return True
+        # Check both label and value for topic-related forum UI (case-insensitive)
+        combined_text = (label + " " + value).lower()
+        if "topic +" in combined_text or "create a topic" in combined_text:
+            return True
+        return False
 
     def __init__(self):
         self.session = requests.Session()
@@ -184,7 +195,7 @@ class SailboatScraper:
                     if len(cells) >= 2:
                         label = cells[0].get_text(strip=True).rstrip(":")
                         value = cells[1].get_text(strip=True)
-                        if label and value and label not in self.EXCLUDED_SPECS:
+                        if label and value and not self.should_exclude_spec(label, value):
                             boat_data[label] = value
 
             # Also look for definition lists (dt/dd pairs)
@@ -193,7 +204,7 @@ class SailboatScraper:
                 if dd:
                     label = dt.get_text(strip=True).rstrip(":")
                     value = dd.get_text(strip=True)
-                    if label and value and label not in self.EXCLUDED_SPECS:
+                    if label and value and not self.should_exclude_spec(label, value):
                         boat_data[label] = value
 
             # Extract from divs with strong/b tags (for calculated values)
@@ -209,7 +220,7 @@ class SailboatScraper:
                         if match:
                             label = match.group(1).strip()
                             value = match.group(2).strip()
-                            if label and value and len(value) < 200 and label not in self.EXCLUDED_SPECS:
+                            if label and value and len(value) < 200 and not self.should_exclude_spec(label, value):
                                 boat_data[label] = value
 
             if len(boat_data) <= 2:  # Only name and url
