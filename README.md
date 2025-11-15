@@ -84,18 +84,7 @@ python sailboat_compare.py --help
 
 ## Example Output
 
-```
-╭────────────────── ⛵ Sailboat Comparison ──────────────────╮
-│ Specification     │ Catalina 30      │ Hunter 33         │
-├───────────────────┼──────────────────┼───────────────────┤
-│ LOA               │ 29.92 ft         │ 33.17 ft          │
-│ Beam              │ 10.83 ft         │ 11.50 ft          │
-│ Displacement      │ 10,200 lbs       │ 11,500 lbs        │
-│ ...               │ ...              │ ...               │
-╰───────────────────┴──────────────────┴───────────────────╯
-```
-
-![Example Screenshot](./imgs/example.png)
+![Sailboat Comparison Example](./imgs/comparison-example.png)
 
 ## Development
 
