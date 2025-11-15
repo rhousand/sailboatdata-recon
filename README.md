@@ -8,14 +8,19 @@ A Python CLI tool for comparing sailboat specifications scraped from [sailboatda
 - 🔎 Intelligent boat name search with automatic variations (number-word conversions, spacing, etc.)
 - 📊 Compare multiple boats side-by-side
 - 🎨 Beautiful table output with Rich library
+- 📄 PDF export with professional formatting
 - 🔧 Nix flake for reproducible development environment
 - 📋 JSON export option
 - 🧹 Filtered output (excludes UI elements like forum topics)
+- ⚖️ Automatic attribution to sailboatdata.com in all outputs
 
 ## Prerequisites
 
-- [Nix](https://nixos.org/download.html) with flakes enabled
-- Or Python 3.11+ with pip
+Choose one of the following installation methods:
+- [Nix](https://nixos.org/download.html) with flakes enabled (recommended)
+- Python 3.11+ with pip
+- Conda/Mamba
+- uv (fast Python package installer)
 
 ## Installation & Setup
 
@@ -40,7 +45,22 @@ direnv allow
 ### Using pip
 
 ```bash
-pip install requests beautifulsoup4 click rich lxml
+pip install -r requirements.txt
+```
+
+### Using Conda
+
+```bash
+conda env create -f environment.yml
+conda activate sailboat-compare
+```
+
+### Using uv
+
+```bash
+uv venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+uv pip install -r requirements.txt
 ```
 
 ## Usage
@@ -61,6 +81,18 @@ Export to JSON:
 
 ```bash
 python sailboat_compare.py "Catalina 30" "Hunter 33" --format json
+```
+
+Export to PDF:
+
+```bash
+python sailboat_compare.py "Catalina 30" "Hunter 33" --pdf comparison.pdf
+```
+
+Combine table output and PDF export:
+
+```bash
+python sailboat_compare.py "J/24" "J/80" "J/70" --pdf boats.pdf
 ```
 
 Get help:
@@ -109,6 +141,7 @@ The flake provides a complete Python development environment with all dependenci
 - click (CLI framework)
 - rich (terminal formatting)
 - lxml (fast XML/HTML parser)
+- reportlab (PDF generation)
 
 ## Notes
 

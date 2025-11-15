@@ -16,6 +16,7 @@
           click
           rich
           lxml
+          reportlab
         ]);
       in
       {
@@ -46,6 +47,7 @@
             click
             rich
             lxml
+            reportlab
           ];
 
           meta = with pkgs.lib; {
