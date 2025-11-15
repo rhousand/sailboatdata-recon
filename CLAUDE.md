@@ -30,6 +30,9 @@ python sailboat_compare.py "J/24" "J/80" "J/70"
 # JSON output
 python sailboat_compare.py "Catalina 30" "Hunter 33" --format json
 
+# PDF export
+python sailboat_compare.py "Catalina 30" "Hunter 33" --pdf comparison.pdf
+
 # Help
 python sailboat_compare.py --help
 ```
@@ -37,8 +40,16 @@ python sailboat_compare.py --help
 ### Without Nix
 
 ```bash
-# Install dependencies
-pip install requests beautifulsoup4 click rich lxml
+# Using pip
+pip install -r requirements.txt
+
+# Using conda
+conda env create -f environment.yml
+conda activate sailboat-compare
+
+# Using uv
+uv venv && source .venv/bin/activate
+uv pip install -r requirements.txt
 
 # Run tool
 python sailboat_compare.py "boat1" "boat2"
@@ -57,11 +68,18 @@ python sailboat_compare.py "boat1" "boat2"
 
 - **CLI Interface**: Built with Click framework
   - Accepts multiple boat names as arguments
-  - Supports table and JSON output formats
+  - Supports table, JSON, and PDF output formats
+  - Includes --pdf flag for PDF export
 
 - **Display Layer**: Uses Rich library for formatted output
   - Creates comparison tables with proper styling
   - Handles console output with colors and formatting
+  - Includes attribution to sailboatdata.com in all outputs
+
+- **PDF Export**: Uses ReportLab library for PDF generation
+  - Professional table formatting with headers and styling
+  - Automatic page orientation based on boat count
+  - Includes attribution header and generation timestamp
 
 ### URL Pattern
 
@@ -89,7 +107,7 @@ This fuzzy matching ensures users can find boats even when the exact naming conv
 ### Nix Flake Structure
 
 - Python 3.11 base environment
-- Dependencies: requests, beautifulsoup4, click, rich, lxml
+- Dependencies: requests, beautifulsoup4, click, rich, lxml, reportlab
 - Includes both development shell and package outputs
 - Compatible with direnv via `.envrc`
 
@@ -101,3 +119,5 @@ This fuzzy matching ensures users can find boats even when the exact naming conv
 - The scraper handles missing data gracefully with "-" placeholders
 - Unwanted UI elements are filtered from specifications (e.g., forum topics, navigation links)
 - Provides clear feedback when boats are found under alternative names
+- All outputs (CLI, JSON, PDF) include proper attribution to sailboatdata.com
+- PDF exports automatically adjust orientation based on the number of boats being compared
