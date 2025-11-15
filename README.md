@@ -116,7 +116,13 @@ python sailboat_compare.py --help
 
 ## Example Output
 
+### CLI Table Output
+
 ![Sailboat Comparison Example](./imgs/comparison-example.png)
+
+### PDF Export Example
+
+[View PDF Example](./imgs/comparison-example.pdf)
 
 ## Development
 
