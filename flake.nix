@@ -10,7 +10,7 @@
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
-        pythonEnv = pkgs.python314.withPackages (ps: with ps; [
+        pythonEnv = pkgs.python313.withPackages (ps: with ps; [
           requests
           beautifulsoup4
           click
@@ -23,7 +23,7 @@
         devShells.default = pkgs.mkShell {
           buildInputs = [
             pythonEnv
-            pkgs.python314Packages.pip
+            pkgs.python313Packages.pip
           ];
 
           shellHook = ''
@@ -36,12 +36,12 @@
           '';
         };
 
-        packages.default = pkgs.python314Packages.buildPythonApplication {
+        packages.default = pkgs.python313Packages.buildPythonApplication {
           pname = "sailboat-compare";
           version = "0.1.0";
           src = ./.;
 
-          propagatedBuildInputs = with pkgs.python314Packages; [
+          propagatedBuildInputs = with pkgs.python313Packages; [
             requests
             beautifulsoup4
             click
