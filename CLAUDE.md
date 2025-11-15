@@ -106,7 +106,7 @@ This fuzzy matching ensures users can find boats even when the exact naming conv
 
 ### Nix Flake Structure
 
-- Python 3.11 base environment
+- Python 3.14 base environment
 - Dependencies: requests, beautifulsoup4, click, rich, lxml, reportlab
 - Includes both development shell and package outputs
 - Compatible with direnv via `.envrc`
