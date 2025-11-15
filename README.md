@@ -95,6 +95,8 @@ python sailboat_compare.py --help
 ╰───────────────────┴──────────────────┴───────────────────╯
 ```
 
+![Example Screenshot](./imgs/example.png)
+
 ## Development
 
 ### Project Structure
