@@ -317,6 +317,7 @@ def create_pdf(boats_data: List[Dict[str, str]], filename: str) -> bool:
     title_style = ParagraphStyle(
         'CustomTitle',
         parent=styles['Heading1'],
+        fontName='Times-Bold',
         fontSize=16,
         textColor=colors.HexColor('#1f77b4'),
         spaceAfter=6,
@@ -329,6 +330,7 @@ def create_pdf(boats_data: List[Dict[str, str]], filename: str) -> bool:
     attribution_style = ParagraphStyle(
         'Attribution',
         parent=styles['Normal'],
+        fontName='Times-Roman',
         fontSize=10,
         textColor=colors.grey,
         spaceAfter=12,
@@ -366,17 +368,17 @@ def create_pdf(boats_data: List[Dict[str, str]], filename: str) -> bool:
         ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#1f77b4')),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Times-Bold'),
         ('FONTSIZE', (0, 0), (-1, 0), 10),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
 
         # Specification column styling
         ('BACKGROUND', (0, 1), (0, -1), colors.HexColor('#f0f0f0')),
-        ('FONTNAME', (0, 1), (0, -1), 'Helvetica-Bold'),
+        ('FONTNAME', (0, 1), (0, -1), 'Times-Bold'),
         ('FONTSIZE', (0, 1), (0, -1), 9),
 
         # Data cells styling
-        ('FONTNAME', (1, 1), (-1, -1), 'Helvetica'),
+        ('FONTNAME', (1, 1), (-1, -1), 'Times-Roman'),
         ('FONTSIZE', (1, 1), (-1, -1), 8),
         ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
         ('VALIGN', (0, 0), (-1, -1), 'TOP'),
