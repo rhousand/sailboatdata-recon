@@ -78,6 +78,7 @@ python sailboat_compare.py "boat1" "boat2"
 
 - **PDF Export**: Uses ReportLab library for PDF generation
   - Professional table formatting with headers and styling
+  - Uses Times New Roman font family (Times-Roman, Times-Bold)
   - Automatic page orientation based on boat count
   - Includes attribution header and generation timestamp
 
