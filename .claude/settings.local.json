@@ -17,9 +17,32 @@
       "Bash(git pull:*)",
       "Bash(gh issue close:*)",
       "Bash(gh issue create:*)",
-      "Bash(gh issue reopen:*)"
+      "Bash(gh issue reopen:*)",
+      "Bash(black:*)"
     ],
     "deny": [],
     "ask": []
+  },
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit:*.py",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "black -t py313 \"${file_path}\""
+          }
+        ]
+      },
+      {
+        "matcher": "Write:*.py",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "black -t py313 \"${file_path}\""
+          }
+        ]
+      }
+    ]
   }
 }

@@ -108,9 +108,20 @@ This fuzzy matching ensures users can find boats even when the exact naming conv
 ### Nix Flake Structure
 
 - Python 3.13 base environment
-- Dependencies: requests, beautifulsoup4, click, rich, lxml, reportlab
+- Dependencies: requests, beautifulsoup4, click, rich, lxml, reportlab, black
 - Includes both development shell and package outputs
 - Compatible with direnv via `.envrc`
+
+### Code Formatting
+
+The project uses Black formatter with Python 3.13 target for consistent code formatting:
+
+- **Automatic Formatting**: Claude Code is configured with PostToolUse hooks that automatically run `black -t py313` on all Python files after editing or writing
+- **Manual Formatting**: Run `black -t py313 <filename>.py` to format a specific file
+- **Hook Configuration**: Defined in `.claude/settings.local.json` under `hooks.PostToolUse`
+- **Permissions**: `Bash(black:*)` is pre-approved in the settings for automatic execution
+
+The hooks ensure all Python code maintains consistent formatting without manual intervention.
 
 ## Important Notes
 
