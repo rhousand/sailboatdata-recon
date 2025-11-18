@@ -71,14 +71,37 @@ class SailboatScraper:
 
         # Bidirectional number-word mapping
         number_words = {
-            "20": "twenty", "21": "twenty-one", "22": "twenty-two", "23": "twenty-three",
-            "24": "twenty-four", "25": "twenty-five", "26": "twenty-six", "27": "twenty-seven",
-            "28": "twenty-eight", "29": "twenty-nine", "30": "thirty", "31": "thirty-one",
-            "32": "thirty-two", "33": "thirty-three", "34": "thirty-four", "35": "thirty-five",
-            "36": "thirty-six", "37": "thirty-seven", "38": "thirty-eight", "39": "thirty-nine",
-            "40": "forty", "41": "forty-one", "42": "forty-two", "43": "forty-three",
-            "44": "forty-four", "45": "forty-five", "46": "forty-six", "47": "forty-seven",
-            "48": "forty-eight", "49": "forty-nine", "50": "fifty"
+            "20": "twenty",
+            "21": "twenty-one",
+            "22": "twenty-two",
+            "23": "twenty-three",
+            "24": "twenty-four",
+            "25": "twenty-five",
+            "26": "twenty-six",
+            "27": "twenty-seven",
+            "28": "twenty-eight",
+            "29": "twenty-nine",
+            "30": "thirty",
+            "31": "thirty-one",
+            "32": "thirty-two",
+            "33": "thirty-three",
+            "34": "thirty-four",
+            "35": "thirty-five",
+            "36": "thirty-six",
+            "37": "thirty-seven",
+            "38": "thirty-eight",
+            "39": "thirty-nine",
+            "40": "forty",
+            "41": "forty-one",
+            "42": "forty-two",
+            "43": "forty-three",
+            "44": "forty-four",
+            "45": "forty-five",
+            "46": "forty-six",
+            "47": "forty-seven",
+            "48": "forty-eight",
+            "49": "forty-nine",
+            "50": "fifty",
         }
 
         # Create reverse mapping (words to numbers)
@@ -98,30 +121,30 @@ class SailboatScraper:
                 break
 
         # Try with/without spaces before numbers
-        if re.search(r'\d', query):
+        if re.search(r"\d", query):
             # Add version with space before number if there isn't one
-            spaced = re.sub(r'([a-zA-Z])(\d)', r'\1 \2', query)
+            spaced = re.sub(r"([a-zA-Z])(\d)", r"\1 \2", query)
             if spaced != query:
                 variations.append(spaced)
             # Add version without space before number
-            no_space = re.sub(r'\s+(\d)', r'\1', query)
+            no_space = re.sub(r"\s+(\d)", r"\1", query)
             if no_space != query:
                 variations.append(no_space)
 
         # Handle decimal points in model numbers (e.g., "40.1" -> "401")
-        if '.' in query:
-            variations.append(query.replace('.', ''))
+        if "." in query:
+            variations.append(query.replace(".", ""))
 
         # Try reversing brand and model order for boats like "Beneteau Oceanis 40.1"
         # which might be stored as "Oceanis 401 Beneteau"
         parts = query.split()
         if len(parts) >= 2:
             # Try moving first word to the end
-            reordered = ' '.join(parts[1:] + [parts[0]])
+            reordered = " ".join(parts[1:] + [parts[0]])
             variations.append(reordered)
             # Also try with decimals removed
-            if '.' in reordered:
-                variations.append(reordered.replace('.', ''))
+            if "." in reordered:
+                variations.append(reordered.replace(".", ""))
 
         # Try each variation
         for variation in variations:
@@ -177,7 +200,9 @@ class SailboatScraper:
                     title_elem = soup.find("h1")
 
             if not title_elem:
-                console.print(f"[yellow]Warning: Could not find boat '{original_boat_name}'[/yellow]")
+                console.print(
+                    f"[yellow]Warning: Could not find boat '{original_boat_name}'[/yellow]"
+                )
                 return None
 
             response.raise_for_status()  # Raise error if final response failed
@@ -196,7 +221,11 @@ class SailboatScraper:
                     if len(cells) >= 2:
                         label = cells[0].get_text(strip=True).rstrip(":")
                         value = cells[1].get_text(strip=True)
-                        if label and value and not self.should_exclude_spec(label, value):
+                        if (
+                            label
+                            and value
+                            and not self.should_exclude_spec(label, value)
+                        ):
                             boat_data[label] = value
 
             # Also look for definition lists (dt/dd pairs)
@@ -221,11 +250,18 @@ class SailboatScraper:
                         if match:
                             label = match.group(1).strip()
                             value = match.group(2).strip()
-                            if label and value and len(value) < 200 and not self.should_exclude_spec(label, value):
+                            if (
+                                label
+                                and value
+                                and len(value) < 200
+                                and not self.should_exclude_spec(label, value)
+                            ):
                                 boat_data[label] = value
 
             if len(boat_data) <= 2:  # Only name and url
-                console.print(f"[yellow]Warning: No specifications found for '{boat_name}'[/yellow]")
+                console.print(
+                    f"[yellow]Warning: No specifications found for '{boat_name}'[/yellow]"
+                )
                 return None
 
             return boat_data
@@ -235,7 +271,9 @@ class SailboatScraper:
             return None
 
 
-def create_comparison_table(boats_data: List[Dict[str, str]], show_attribution: bool = True) -> Table:
+def create_comparison_table(
+    boats_data: List[Dict[str, str]], show_attribution: bool = True
+) -> Table:
     """Create a rich table comparing boat specifications"""
 
     if not boats_data:
@@ -282,12 +320,20 @@ def create_pdf(boats_data: List[Dict[str, str]], filename: str) -> bool:
     try:
         from reportlab.lib import colors
         from reportlab.lib.pagesizes import letter, landscape
-        from reportlab.platypus import SimpleDocTemplate, Table as PDFTable, TableStyle, Paragraph, Spacer
+        from reportlab.platypus import (
+            SimpleDocTemplate,
+            Table as PDFTable,
+            TableStyle,
+            Paragraph,
+            Spacer,
+        )
         from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
         from reportlab.lib.units import inch
         from reportlab.lib.enums import TA_CENTER
     except ImportError:
-        console.print("[red]Error: reportlab is required for PDF export. Install it with: pip install reportlab[/red]")
+        console.print(
+            "[red]Error: reportlab is required for PDF export. Install it with: pip install reportlab[/red]"
+        )
         return False
 
     if not boats_data:
@@ -303,10 +349,10 @@ def create_pdf(boats_data: List[Dict[str, str]], filename: str) -> bool:
     doc = SimpleDocTemplate(
         filename,
         pagesize=landscape(letter) if len(boats_data) > 2 else letter,
-        rightMargin=0.5*inch,
-        leftMargin=0.5*inch,
-        topMargin=0.75*inch,
-        bottomMargin=0.75*inch,
+        rightMargin=0.5 * inch,
+        leftMargin=0.5 * inch,
+        topMargin=0.75 * inch,
+        bottomMargin=0.75 * inch,
     )
 
     # Container for elements
@@ -315,11 +361,11 @@ def create_pdf(boats_data: List[Dict[str, str]], filename: str) -> bool:
 
     # Add title
     title_style = ParagraphStyle(
-        'CustomTitle',
-        parent=styles['Heading1'],
-        fontName='Times-Bold',
+        "CustomTitle",
+        parent=styles["Heading1"],
+        fontName="Times-Bold",
         fontSize=16,
-        textColor=colors.HexColor('#1f77b4'),
+        textColor=colors.HexColor("#1f77b4"),
         spaceAfter=6,
         alignment=TA_CENTER,
     )
@@ -328,9 +374,9 @@ def create_pdf(boats_data: List[Dict[str, str]], filename: str) -> bool:
 
     # Add attribution
     attribution_style = ParagraphStyle(
-        'Attribution',
-        parent=styles['Normal'],
-        fontName='Times-Roman',
+        "Attribution",
+        parent=styles["Normal"],
+        fontName="Times-Roman",
         fontSize=10,
         textColor=colors.grey,
         spaceAfter=12,
@@ -340,9 +386,11 @@ def create_pdf(boats_data: List[Dict[str, str]], filename: str) -> bool:
     elements.append(attribution)
 
     # Add generation date
-    date_text = Paragraph(f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}", attribution_style)
+    date_text = Paragraph(
+        f"Generated: {datetime.now().strftime('%Y-%m-%d %H:%M')}", attribution_style
+    )
     elements.append(date_text)
-    elements.append(Spacer(1, 0.2*inch))
+    elements.append(Spacer(1, 0.2 * inch))
 
     # Prepare table data
     table_data = []
@@ -363,45 +411,48 @@ def create_pdf(boats_data: List[Dict[str, str]], filename: str) -> bool:
     pdf_table = PDFTable(table_data, repeatRows=1)
 
     # Style the table
-    table_style = TableStyle([
-        # Header styling
-        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#1f77b4')),
-        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
-        ('ALIGN', (0, 0), (-1, 0), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Times-Bold'),
-        ('FONTSIZE', (0, 0), (-1, 0), 10),
-        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-
-        # Specification column styling
-        ('BACKGROUND', (0, 1), (0, -1), colors.HexColor('#f0f0f0')),
-        ('FONTNAME', (0, 1), (0, -1), 'Times-Bold'),
-        ('FONTSIZE', (0, 1), (0, -1), 9),
-
-        # Data cells styling
-        ('FONTNAME', (1, 1), (-1, -1), 'Times-Roman'),
-        ('FONTSIZE', (1, 1), (-1, -1), 8),
-        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
-        ('VALIGN', (0, 0), (-1, -1), 'TOP'),
-
-        # Grid
-        ('GRID', (0, 0), (-1, -1), 1, colors.grey),
-        ('ROWBACKGROUNDS', (0, 1), (-1, -1), [colors.white, colors.HexColor('#f9f9f9')]),
-
-        # Padding
-        ('LEFTPADDING', (0, 0), (-1, -1), 6),
-        ('RIGHTPADDING', (0, 0), (-1, -1), 6),
-        ('TOPPADDING', (0, 0), (-1, -1), 4),
-        ('BOTTOMPADDING', (0, 0), (-1, -1), 4),
-    ])
+    table_style = TableStyle(
+        [
+            # Header styling
+            ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#1f77b4")),
+            ("TEXTCOLOR", (0, 0), (-1, 0), colors.whitesmoke),
+            ("ALIGN", (0, 0), (-1, 0), "CENTER"),
+            ("FONTNAME", (0, 0), (-1, 0), "Times-Bold"),
+            ("FONTSIZE", (0, 0), (-1, 0), 10),
+            ("BOTTOMPADDING", (0, 0), (-1, 0), 12),
+            # Specification column styling
+            ("BACKGROUND", (0, 1), (0, -1), colors.HexColor("#f0f0f0")),
+            ("FONTNAME", (0, 1), (0, -1), "Times-Bold"),
+            ("FONTSIZE", (0, 1), (0, -1), 9),
+            # Data cells styling
+            ("FONTNAME", (1, 1), (-1, -1), "Times-Roman"),
+            ("FONTSIZE", (1, 1), (-1, -1), 8),
+            ("ALIGN", (0, 0), (-1, -1), "LEFT"),
+            ("VALIGN", (0, 0), (-1, -1), "TOP"),
+            # Grid
+            ("GRID", (0, 0), (-1, -1), 1, colors.grey),
+            (
+                "ROWBACKGROUNDS",
+                (0, 1),
+                (-1, -1),
+                [colors.white, colors.HexColor("#f9f9f9")],
+            ),
+            # Padding
+            ("LEFTPADDING", (0, 0), (-1, -1), 6),
+            ("RIGHTPADDING", (0, 0), (-1, -1), 6),
+            ("TOPPADDING", (0, 0), (-1, -1), 4),
+            ("BOTTOMPADDING", (0, 0), (-1, -1), 4),
+        ]
+    )
 
     pdf_table.setStyle(table_style)
     elements.append(pdf_table)
 
     # Add footer
-    elements.append(Spacer(1, 0.3*inch))
+    elements.append(Spacer(1, 0.3 * inch))
     footer = Paragraph(
         f"Visit <a href='https://sailboatdata.com'>sailboatdata.com</a> for more information",
-        attribution_style
+        attribution_style,
     )
     elements.append(footer)
 
@@ -416,8 +467,16 @@ def create_pdf(boats_data: List[Dict[str, str]], filename: str) -> bool:
 
 @click.command()
 @click.argument("boats", nargs=-1, required=True)
-@click.option("--format", "-f", type=click.Choice(["table", "json"]), default="table", help="Output format")
-@click.option("--pdf", type=click.Path(), default=None, help="Export comparison to PDF file")
+@click.option(
+    "--format",
+    "-f",
+    type=click.Choice(["table", "json"]),
+    default="table",
+    help="Output format",
+)
+@click.option(
+    "--pdf", type=click.Path(), default=None, help="Export comparison to PDF file"
+)
 def compare(boats: tuple, format: str, pdf: Optional[str]):
     """
     Compare specifications for multiple sailboats from sailboatdata.com
@@ -430,15 +489,19 @@ def compare(boats: tuple, format: str, pdf: Optional[str]):
         sailboat_compare.py "Catalina 30" "Hunter 33" --pdf comparison.pdf
     """
     if len(boats) < 2:
-        console.print("[red]Error: Please provide at least two boat names to compare[/red]")
+        console.print(
+            "[red]Error: Please provide at least two boat names to compare[/red]"
+        )
         sys.exit(1)
 
-    console.print(Panel.fit(
-        f"[bold cyan]Comparing {len(boats)} sailboats[/bold cyan]\n" +
-        "\n".join(f"  • {boat}" for boat in boats),
-        title="🌊 Sailboat Data Comparison",
-        border_style="blue"
-    ))
+    console.print(
+        Panel.fit(
+            f"[bold cyan]Comparing {len(boats)} sailboats[/bold cyan]\n"
+            + "\n".join(f"  • {boat}" for boat in boats),
+            title="🌊 Sailboat Data Comparison",
+            border_style="blue",
+        )
+    )
 
     scraper = SailboatScraper()
     boats_data = []
@@ -453,7 +516,9 @@ def compare(boats: tuple, format: str, pdf: Optional[str]):
         sys.exit(1)
 
     if len(boats_data) < len(boats):
-        console.print(f"[yellow]Warning: Only {len(boats_data)} of {len(boats)} boats found[/yellow]\n")
+        console.print(
+            f"[yellow]Warning: Only {len(boats_data)} of {len(boats)} boats found[/yellow]\n"
+        )
 
     # Handle PDF export
     if pdf:
@@ -467,11 +532,12 @@ def compare(boats: tuple, format: str, pdf: Optional[str]):
     # Handle output format
     if format == "json":
         import json
+
         # Add attribution to JSON output
         output = {
             "attribution": "Data obtained from sailboatdata.com",
             "generated": datetime.now().isoformat(),
-            "boats": boats_data
+            "boats": boats_data,
         }
         console.print_json(json.dumps(output, indent=2))
     else:
